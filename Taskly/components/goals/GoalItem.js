@@ -1,14 +1,20 @@
 import { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 // import { uiActions } from "../../store/uiSlice";
 import Card from "../../components/UI/Card";
 // import CompletedTasks from "./CompletedTasks";
 // import MoreButton from "./MoreButton";
-// import TimeClock from "../pics/time.svg";
 // import { editActions } from "../../store/editSlice";
 // import { fetchGoalsDataByUserId } from "../../store/goals-actions";
-// import { useNavigate } from "react-router-dom";
 // import { format } from "date-fns";
 import CircularProgress from "react-native-circular-progress-indicator";
 
@@ -22,10 +28,12 @@ const GoalItem = ({
   progress,
 }) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   //   const user = useSelector((state) => state.auth.user);
-  //   useEffect(() => {
-  //     dispatch(fetchGoalsDataByUserId(user.id));
-  //   }, [dispatch, user.id]);
+  // useEffect(() => {
+  //   dispatch(fetchGoalsDataByUserId(user.id));
+  // }, [dispatch, user.id]);
 
   const goals = useSelector((store) => store.goals.goalList);
 
@@ -37,6 +45,12 @@ const GoalItem = ({
   //   const navigate = useNavigate();
 
   const [completedTasks, setCompletedTasks] = useState(false);
+
+  const handleEdit = () => {
+    navigation.navigate("ManageGoalScreen", {
+      id: id,
+    });
+  };
   //   const toggleGoalHandler = () => {
   //     setCompletedTasks(!completedTasks);
   //     dispatch(uiActions.toggle());
@@ -57,50 +71,50 @@ const GoalItem = ({
   //     });
   return (
     <>
-      <Card>
-        <View>
-          <View>
+      <Card style={styles.card}>
+        <TouchableOpacity style={styles.root} onPress={handleEdit}>
+          {/* <View style={styles.root}> */}
+          <View style={styles.progressBar}>
             <CircularProgress
-              value={85}
-              inActiveStrokeColor={"#2ecc71"}
+              radius={36}
+              value={progress}
+              inActiveStrokeColor={color}
               inActiveStrokeOpacity={0.2}
-              progressValueColor={"#fff"}
+              activeStrokeColor={color}
+              progressValueColor={"color"}
               valueSuffix={"%"}
             />
           </View>
-          <Text>{title}</Text>
-          {/* <MoreButton
-            className={classes.moreBtn}
-            onClick={() => {
-              navigate(`/Goals/EditModal/${id}`);
-              dispatch(editActions.setTitle("Update goal"));
-            }}
-            goal={props}
-            key={id}
-          /> */}
-          {description.trim() !== "" && (
-            <View style={styles.description}>
-              <Text>Note: </Text>
-              <Text>{description}</Text>
+          <View style={styles.innerContainer}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.header}>{title}</Text>
+              {/* <Pressable
+                onPress={handleEdit}
+                style={({ pressed }) => pressed && styles.pressed}
+              >
+                <Ionicons name="ellipsis-horizontal" size={24}></Ionicons>
+              </Pressable> */}
             </View>
-          )}
-          {timeline && (
-            <View>
-              {/* <img
-                className={classes.timeClock}
-                src={TimeClock}
-                alt="time clock"
-              /> */}
-              <Text>
-                {/* {format(
+
+            {description.trim() !== "" && (
+              <View style={styles.description}>
+                <Text>Note: {description}</Text>
+                {/* <Text>{description}</Text> */}
+              </View>
+            )}
+            {timeline && (
+              <View>
+                {/* icon */}
+                <Text>
+                  {/* {format(
                   new Date(timeline).setDate(new Date(timeline).getDate() + 1),
                   "MMM dd, yyyy"
                 )} */}
-                {timeline}
-              </Text>
-            </View>
-          )}
-          {/* {goalTasks.length > 0 && (
+                  {timeline}
+                </Text>
+              </View>
+            )}
+            {/* {goalTasks.length > 0 && (
                 <button
                   className={classes.itemButton}
                   onClick={toggleGoalHandler}
@@ -109,7 +123,8 @@ const GoalItem = ({
                   View Tasks
                 </button>
               )} */}
-        </View>
+          </View>
+        </TouchableOpacity>
       </Card>
 
       {/* {completedTasks && (
@@ -132,9 +147,34 @@ const GoalItem = ({
 };
 
 const styles = StyleSheet.create({
-  description: {
+  root: {
+    flex: 1,
+    padding: 3,
+    margin: 6,
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  pressed: {
+    opacity: 0.75,
+  },
+  progressBar: {
+    marginRight: 12,
+  },
+  innerContainer: {
+    flex: 1,
+    maxWidth: "90%",
+  },
+  headerContainer: { flexDirection: "row", justifyContent: "space-between" },
+  header: {
+    fontSize: 24,
+    fontWeight: "500",
+    marginBottom: 9,
+  },
+  description: {
+    flex: 1,
+    flexDirection: "row",
+    marginRight: 6,
+    marginBottom: 9,
   },
 });
 

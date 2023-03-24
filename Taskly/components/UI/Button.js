@@ -1,15 +1,34 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GlobalColors } from "../../GlobalColors";
 
-function Button({ children, onPress, mode, style }) {
+function Button({
+  children,
+  onPress,
+  mode,
+  style,
+  backgroundStyle,
+  textStyle,
+}) {
   return (
     <View style={style}>
       <Pressable
         onPress={onPress}
         style={({ pressed }) => pressed && styles.pressed}
       >
-        <View style={[styles.button, mode === "flat" && styles.flat]}>
-          <Text style={[styles.buttonText, mode === "flat" && styles.flatText]}>
+        <View
+          style={[
+            styles.button,
+            mode === "flat" && styles.flat,
+            backgroundStyle,
+          ]}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              mode === "flat" && styles.flatText,
+              textStyle,
+            ]}
+          >
             {children}
           </Text>
         </View>
@@ -24,7 +43,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 4,
     padding: 8,
-    backgroundColor: GlobalStyles.colors.primary500,
+    backgroundColor: GlobalColors.colors.primary500,
   },
   flat: {
     backgroundColor: "transparent",
@@ -34,11 +53,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   flatText: {
-    color: GlobalStyles.colors.primary200,
+    color: GlobalColors.colors.primary50,
   },
   pressed: {
     opacity: 0.75,
-    backgroundColor: GlobalStyles.colors.primary100,
+    backgroundColor: GlobalColors.colors.primary100,
     borderRadius: 4,
   },
 });

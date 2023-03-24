@@ -31,6 +31,12 @@
         "projectId": "e406073c-e509-4a13-b943-fdb5be4cd3d7"
       }
     },
-    "owner": "yuliialoew"
+    "owner": "yuliialoew",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e406073c-e509-4a13-b943-fdb5be4cd3d7"
+    }
   }
 }

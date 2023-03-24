@@ -13,6 +13,15 @@ const goalsSlice = createSlice({
         completed: false,
         progress: 20,
       },
+      {
+        id: 2,
+        title: "Eat healthy",
+        description: "Changing my diet to loose weight before the wedding",
+        timeline: "2023-10-01",
+        color: "pink",
+        completed: false,
+        progress: 50,
+      },
     ],
     changed: false,
   },
@@ -47,6 +56,7 @@ const goalsSlice = createSlice({
         existingItem.completed = newItem.completed;
         existingItem.user = newItem.user;
         existingItem.progress = newItem.progress;
+        existingItem.color = newItem.color;
       }
     },
     addGoal(state, action) {
@@ -60,6 +70,7 @@ const goalsSlice = createSlice({
         color: newItem.color,
         user: newItem.user,
         completed: false,
+
         progress: 0,
       });
     },
@@ -68,7 +79,7 @@ const goalsSlice = createSlice({
       const id = action.payload;
       const existingItem = state.goalList.find((user) => user.id === id);
       if (existingItem) {
-        state.goals = state.goalList.filter((user) => user.id !== id);
+        state.goalList = state.goalList.filter((user) => user.id !== id);
       }
     },
   },

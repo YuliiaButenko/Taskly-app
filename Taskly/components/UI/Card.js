@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     backgroundColor: "white",
     height: "20%",
-    width: "90%",
-    flexDirection: "row",
-    justifyContent: "center",
+    // width: "100%",
+    alignItems: "center",
+
     elevation: 4,
     backgroundColor: "white",
     shadowColor: "#76737350",
