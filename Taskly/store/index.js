@@ -1,21 +1,13 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-// import addSlice from "./addSlice";
-// import uiSlice from "./uiSlice";
+import { configureStore } from "@reduxjs/toolkit";
 import goalsSlice from "./goalsSlice";
-// import editSlice from "./editSlice";
-// import dateSlice from "./dateSlice";
-import userSlice, { userActions } from "./userSlice";
+import userSlice from "./userSlice";
 import tasksSlice from "./tasksSlice";
 import thunk from "redux-thunk";
 
 const store = configureStore({
   reducer: {
-    // ui: uiSlice.reducer,
-    // add: addSlice.reducer,
-    // edit: editSlice.reducer,
     goals: goalsSlice.reducer,
     tasks: tasksSlice.reducer,
-    // selectedDate: dateSlice.reducer,
     auth: userSlice.reducer,
   },
 

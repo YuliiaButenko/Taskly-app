@@ -1,41 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// function initialState() {
-//   const user = JSON.parse(localStorage.getItem("user"));
-//   if (user) {
-//     return user;
-//   } else {
-//     return {};
-//   }
-// }
+async function initialState() {
+  try {
+    const user = JSON.parse(await AsyncStorage.getItem("user"));
+    console.log(user);
+    if (user) {
+      return user;
+    } else {
+      return {};
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const userSlice = createSlice({
   name: "auth",
   initialState: {
-    user: [],
+    user: initialState(),
     errorList: [],
   },
   reducers: {
     loginUser(state, action) {
-      // const user = action.payload;
       state.user = action.payload;
-      // JSON.parse(localStorage.getItem("user"));
-
-      // state.user.username = user.username;
-      // state.user.email = user.email;
-      // state.user.id = user.id;
-      // state.user.token = user.token;
     },
 
     logoutUser(state) {
       state.user = null;
-      localStorage.removeItem("user");
+      AsyncStorage.removeItem("user");
     },
 
     logError(state, action) {
       let error = action.payload;
 
       state.errorList.push(error);
+      // console.log(state.errorList);
     },
 
     clearError(state) {

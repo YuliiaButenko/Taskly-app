@@ -1,4 +1,3 @@
-import { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   View,
@@ -6,74 +5,75 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  Dimensions,
+  Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { deleteGoal, sendGoalsData } from "../../store/goals-actions";
+import { format } from "date-fns";
 import { useNavigation } from "@react-navigation/native";
-// import { uiActions } from "../../store/uiSlice";
 import Card from "../../components/UI/Card";
-// import CompletedTasks from "./CompletedTasks";
-// import MoreButton from "./MoreButton";
-// import { editActions } from "../../store/editSlice";
-// import { fetchGoalsDataByUserId } from "../../store/goals-actions";
-// import { format } from "date-fns";
+import { GlobalColors } from "../../GlobalColors";
 import CircularProgress from "react-native-circular-progress-indicator";
 
-const GoalItem = ({
-  id,
-  title,
-  description,
-  timeline,
-  color,
-  completed,
-  progress,
-}) => {
+const GoalItem = (props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  //   const user = useSelector((state) => state.auth.user);
-  // useEffect(() => {
-  //   dispatch(fetchGoalsDataByUserId(user.id));
-  // }, [dispatch, user.id]);
+  const { id, title, description, timeline, color, completed, progress, user } =
+    props.item;
 
   const goals = useSelector((store) => store.goals.goalList);
+  const theUser = useSelector((state) => state.auth.user);
 
-  const existingItem = goals.filter((item) => item.id === Number(id));
+  const width = Dimensions.get("window").width;
 
-  //   const { id, title, description, timeline, color, completed, progress } =
-  //     existingItem[0];
-
-  //   const navigate = useNavigate();
-
-  const [completedTasks, setCompletedTasks] = useState(false);
+  const deleteGoalHandler = () => {
+    dispatch(deleteGoal(props.item));
+  };
+  const reactivateGoalHandler = () => {
+    dispatch(
+      sendGoalsData({
+        ...props.item,
+        completed: false,
+        progress: 95,
+        user: theUser,
+      })
+    );
+  };
 
   const handleEdit = () => {
-    navigation.navigate("ManageGoalScreen", {
-      id: id,
-    });
+    if (props.edit) {
+      navigation.navigate("ManageGoalScreen", {
+        id: id,
+      });
+    } else {
+      Alert.alert(
+        "Important",
+        `Would you like to reactivate or delete this goal?`,
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Reactivate",
+            onPress: reactivateGoalHandler,
+            style: "default",
+          },
+          {
+            text: "Delete",
+            style: "destructive",
+            onPress: deleteGoalHandler,
+          },
+        ]
+      );
+    }
   };
-  //   const toggleGoalHandler = () => {
-  //     setCompletedTasks(!completedTasks);
-  //     dispatch(uiActions.toggle());
-  //   };
 
-  //   const tasks = useSelector((state) => state.tasks.taskList);
-
-  //   const goalTasks = tasks
-  //     .filter((item) => item.goal?.title === title)
-  //     .sort((a, b) => {
-  //       //sort for not completed and overdue tasks
-  //       return new Date(b.day + "T" + b.time) < new Date() && !b.completed
-  //         ? -1
-  //         : 1;
-  //     })
-  //     .sort((a, b) => {
-  //       return a.completed > !b.completed ? 1 : -1;
-  //     });
+  const date = new Date(timeline).setDate(new Date(timeline).getDate() + 1);
   return (
-    <>
-      <Card style={styles.card}>
-        <TouchableOpacity style={styles.root} onPress={handleEdit}>
-          {/* <View style={styles.root}> */}
+    <View style={styles.root}>
+      <Card>
+        <TouchableOpacity style={styles.outerContainer} onPress={handleEdit}>
           <View style={styles.progressBar}>
             <CircularProgress
               radius={36}
@@ -81,76 +81,45 @@ const GoalItem = ({
               inActiveStrokeColor={color}
               inActiveStrokeOpacity={0.2}
               activeStrokeColor={color}
-              progressValueColor={"color"}
+              progressValueColor={color}
               valueSuffix={"%"}
             />
           </View>
           <View style={styles.innerContainer}>
-            <View style={styles.headerContainer}>
+            <View
+              style={[
+                styles.headerContainer,
+                { borderBottomColor: color, borderBottomWidth: 1 },
+              ]}
+            >
               <Text style={styles.header}>{title}</Text>
-              {/* <Pressable
-                onPress={handleEdit}
-                style={({ pressed }) => pressed && styles.pressed}
-              >
-                <Ionicons name="ellipsis-horizontal" size={24}></Ionicons>
-              </Pressable> */}
             </View>
 
             {description.trim() !== "" && (
-              <View style={styles.description}>
-                <Text>Note: {description}</Text>
-                {/* <Text>{description}</Text> */}
-              </View>
+              <Text style={styles.description}>Note: {description}</Text>
             )}
-            {timeline && (
-              <View>
-                {/* icon */}
-                <Text>
-                  {/* {format(
-                  new Date(timeline).setDate(new Date(timeline).getDate() + 1),
-                  "MMM dd, yyyy"
-                )} */}
-                  {timeline}
-                </Text>
-              </View>
+            {timeline && !completed && (
+              <Text style={styles.timeline}>
+                Due: {format(date, "MMM dd, yyyy")}
+              </Text>
             )}
-            {/* {goalTasks.length > 0 && (
-                <button
-                  className={classes.itemButton}
-                  onClick={toggleGoalHandler}
-                  style={buttonStyle}
-                >
-                  View Tasks
-                </button>
-              )} */}
           </View>
         </TouchableOpacity>
       </Card>
-
-      {/* {completedTasks && (
-            <div>
-
-              {goalTasks.length > 0 &&
-                goalTasks.map((item) => (
-                  <CompletedTasks
-                    key={item.id}
-                    className={classes.items}
-                    item={item}
-                    title={"Eat healthy"}
-                    date={"01/10/2023"}
-                  />
-                ))}
-            </div>
-          )} */}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
+    width: Dimensions.get("window").width - 60,
+    height: 200,
+  },
+  outerContainer: {
     flex: 1,
     padding: 3,
-    margin: 6,
+    marginHorizontal: 3,
+    marginVertical: 6,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -162,19 +131,26 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    maxWidth: "90%",
   },
-  headerContainer: { flexDirection: "row", justifyContent: "space-between" },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   header: {
     fontSize: 24,
     fontWeight: "500",
     marginBottom: 9,
+    color: GlobalColors.colors.gray900,
   },
   description: {
-    flex: 1,
-    flexDirection: "row",
-    marginRight: 6,
+    marginRight: 3,
     marginBottom: 9,
+    marginTop: 6,
+    color: GlobalColors.colors.gray900,
+  },
+  timeline: {
+    marginTop: 9,
+    marginBottom: 3,
   },
 });
 

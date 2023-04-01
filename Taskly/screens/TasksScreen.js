@@ -1,5 +1,4 @@
 import {
-  Alert,
   StyleSheet,
   Text,
   View,
@@ -10,16 +9,35 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { GlobalColors } from "../GlobalColors";
 import { useSelector } from "react-redux";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import TaskItem from "../components/tasks/TaskItem";
-import { useEffect, useState } from "react";
+import { Agenda } from "react-native-calendars";
+
+import { useEffect, useState, useLayoutEffect } from "react";
 import Card from "../components/UI/Card";
 import { format } from "date-fns";
 
 const TasksScreen = ({ navigation }) => {
   const tasks = useSelector((store) => store.tasks.taskList);
+  const user = useSelector((state) => state.auth.user);
 
   const [items, setItems] = useState();
+  const [day, setDay] = useState(new Date().toISOString().slice(0, 10));
+  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
+
+  useEffect(() => {
+    if (!user?.username) {
+      navigation.navigate("Login");
+    }
+    dispatch(fetchTasksDataByUserId(user.id));
+  }, [user]);
+  useEffect(() => {
+    if (user) {
+      var color = Object.keys(GlobalColors).map(function (s) {
+        return GlobalColors[user.color];
+      });
+
+      setColorTheme(color[0]);
+    }
+  }, [user]);
 
   useEffect(() => {
     let newItems = new Map();
@@ -34,7 +52,6 @@ const TasksScreen = ({ navigation }) => {
         }
       });
     setItems(Object.fromEntries(newItems));
-    // console.log(items);
   }, [tasks]);
 
   const timeToString = (time) => {
@@ -81,7 +98,6 @@ const TasksScreen = ({ navigation }) => {
 
   const renderItem = (i) => {
     const item = tasks.find((it) => it.id === i.id);
-    // console.log(item);
     let endTime;
     let startTime;
     if (!item) {
@@ -126,15 +142,11 @@ const TasksScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.item} onPress={handleEdit}>
         <View style={{ height: "100%" }}>
           {item?.goal && item.goal.completed !== true && (
-            <View
-              style={styles.bubbleContainer}
-              // className={classes.bubble}
-              // style={{ backgroundColor: goal.color }}
-            >
+            <View>
               <Text
                 style={[
                   styles.bubble,
-                  { backgroundColor: item?.goal.color, opacity: 0.7 },
+                  { backgroundColor: item?.goal.color, opacity: 0.6 },
                 ]}
               >
                 {item?.goal.title}
@@ -161,19 +173,11 @@ const TasksScreen = ({ navigation }) => {
       </View>
     );
   };
-  // const renderDay = (item) => {
-  //   return (
-
-  //     <TouchableOpacity style={[styles.item]}>
-  //       <View style={{ height: "100%" }}>
-  //         <Text style={styles.textStyle}>{item.name}</Text>
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   const handleAdd = () => {
-    navigation.navigate("ManageTaskScreen");
+    navigation.navigate("ManageTaskScreen", {
+      clickedDay: day,
+    });
   };
 
   return (
@@ -190,13 +194,14 @@ const TasksScreen = ({ navigation }) => {
         renderItem={renderItem}
         renderEmptyDate={renderEmptyDate}
         renderEmptyData={renderEmptyDate}
+        onDayPress={(day) => setDay(day.dateString)}
       />
       <View style={styles.addButton}>
         <Pressable onPress={handleAdd}>
           <Ionicons
             name="add-circle-outline"
             size={60}
-            color={GlobalColors.colors.primary800}
+            color={colorTheme.primary800}
           ></Ionicons>
         </Pressable>
       </View>
@@ -220,13 +225,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 17,
   },
-  bubbleContainer: {
-    // backgroundColor: GlobalColors.colors.primary100,
-  },
+
   bubble: {
     width: "30%",
     padding: 5,
-    // backgroundColor: item.,
     textAlign: "center",
     overflow: "hidden",
     borderRadius: 12,
@@ -279,7 +281,6 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop: 24,
     color: "#283747",
-    // fontSize: sizes.font,
     fontWeight: "500",
     color: "#283747",
     textAlign: "center",
@@ -289,7 +290,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     bottom: 0,
-    // left: 0,
   },
 });
 

@@ -1,45 +1,51 @@
-import ColorPicker from "react-native-wheel-color-picker";
-
+// import ColorPicker from "react-native-wheel-color-picker";
+// import NativeColorPicker from "native-color-picker";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Button from "../UI/Button";
-const ColorPickerInput = ({ onChange, color }) => {
-  const COLORS = [
-    "#d73964",
-    "#d23440",
-    "#db643a",
-    "#e88334",
-    "#e2a71e",
-    "#e25241",
-    "#d0da59",
-    "#4053ae",
-    "#70b949",
-    "#73564a",
-    "#67ab5a",
-    "#8f36aa",
-    "#f6c244",
-    "#52b9d0",
-    "#4595ec",
-    "#009688",
-    "#5abeA7",
-    "#59bccd",
-    "#4a97e4",
-    "#2d68cd",
-    "#9946c7",
-    "#d9639e",
-    "#6d6f74",
-    "#939287",
-    "#868ea3",
-  ];
-  const color1 = "#e0b60c";
-  const color2 = "#ab5b5b";
+import Color from "./Color";
+import { useNavigation } from "@react-navigation/native";
+import { GlobalColors } from "../../GlobalColors";
 
-  const color3 = "#75c0c6";
+const ColorPickerInput = ({ onChange, color, custom }) => {
+  const navigation = useNavigation();
+  let color1;
+  let color2;
 
-  const color4 = "#a6cba8";
+  let color3;
 
-  const color5 = "#686dad";
-  const color6 = "#9868ac";
+  let color4;
+
+  let color5;
+  let color6;
+
+  if (custom) {
+    color1 = "#E4BA7A";
+    color2 = "#FF8D7B";
+
+    color3 = "#8D9A7E";
+
+    color4 = "#ad7575";
+
+    color5 = "#ada7c9";
+    color6 = "#747BA5";
+  } else {
+    //teal
+    color1 = GlobalColors.user.orange;
+    color2 = GlobalColors.user.red;
+
+    color3 = GlobalColors.user.pink;
+
+    color4 = GlobalColors.user.purple;
+
+    color5 = GlobalColors.user.teal;
+    color6 = GlobalColors.user.blue;
+  }
   const [active, setActive] = useState(color);
   const handleBtn1 = () => {
     setActive(color1);
@@ -65,15 +71,22 @@ const ColorPickerInput = ({ onChange, color }) => {
     setActive(color6);
     onChange(color6);
   };
-  const handleColorPicker = (color) => {
-    setActive(color);
-    onChange(color);
+
+  const onSelectColor = (value) => {
+    if (value) {
+      setActive(value);
+      onChange(value);
+    }
   };
+
+  const openColorPicker = () => {
+    navigation.navigate("ColorPickerScreen", {
+      color: active,
+      onSelectColor: onSelectColor,
+    });
+  };
+
   return (
-    //   <ColorPicker
-    //     onColorSelected={(color) => alert(`Color selected: ${color}`)}
-    //     style={{ flex: 1 }}
-    //   />
     <View style={styles.sectionContainer}>
       <Button
         style={styles.button}
@@ -139,22 +152,27 @@ const ColorPickerInput = ({ onChange, color }) => {
         ]}
         onPress={handleBtn6}
       ></Button>
-      {/* <View
-      >
-        <ColorPicker
-          color={color}
-          onColorChange={(color) => handleColorPicker(color)}
-          onColorChangeComplete={(color) => handleColorPicker(color)}
-          //   sliderHidden={true}
-          //   swatches={false}
-          //   thumbSize={12}
-          //   thumbStyle={{ height: 30, width: 30, borderRadius: 30 }}
-          //   noSnap={true}
-        //   swatchesOnly={true}
-         
-          row={true}
-        />
-      </View> */}
+
+      {custom && (
+        <Pressable style={styles.button} onPress={openColorPicker}>
+          <LinearGradient
+            colors={["#b9314f", "#ff8d7b", "#FFF000", "#7776bc"]}
+            style={[
+              [color1, color2, color3, color4, color5, color6].indexOf(active) <
+              0
+                ? styles.activeBtn
+                : null,
+              styles.button,
+            ]}
+            start={{ y: 0.0, x: 0.0 }}
+            end={{ y: 0.0, x: 1.0 }}
+          >
+            {/* <Animated.View style={styles.button}>
+          <Color color={active} onSelectColor={onSelectColor} />
+        </Animated.View> */}
+          </LinearGradient>
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -163,13 +181,13 @@ const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
     margin: 6,
-    // paddingHorizontal: 24,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   button: {
-    margin: 1,
-    padding: 2,
+    // margin: 1,
+    // padding: 2,
     borderRadius: 18,
     height: 36,
     width: 36,
@@ -177,6 +195,16 @@ const styles = StyleSheet.create({
   activeBtn: {
     borderColor: "black",
     borderWidth: 1,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    paddingBottom: 40,
+    // width: "100%",
+    // height: "100%",
+    // maxWidth: 500,
+    // margin: "auto",
   },
 });
 

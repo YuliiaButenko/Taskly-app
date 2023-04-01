@@ -3,26 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const goalsSlice = createSlice({
   name: "goals",
   initialState: {
-    goalList: [
-      {
-        id: 1,
-        title: "Lose weight",
-        description: "Getting ready for the wedding",
-        timeline: "2023-05-01",
-        color: "blue",
-        completed: false,
-        progress: 20,
-      },
-      {
-        id: 2,
-        title: "Eat healthy",
-        description: "Changing my diet to loose weight before the wedding",
-        timeline: "2023-10-01",
-        color: "pink",
-        completed: false,
-        progress: 50,
-      },
-    ],
+    goalList: [],
     changed: false,
   },
   reducers: {
@@ -31,6 +12,9 @@ const goalsSlice = createSlice({
     },
     changeStatus(state) {
       state.changed = false;
+    },
+    changeStatusToActive(state) {
+      state.changed = true;
     },
     changeColor(state, action) {
       state.changed = true;

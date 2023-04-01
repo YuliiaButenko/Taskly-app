@@ -1,48 +1,107 @@
 import { StatusBar } from "expo-status-bar";
-import { AppRegistry, Platform } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import GoalsScreen from "./screens/GoalsScreen";
 import TasksScreen from "./screens/TasksScreen";
-import StatsScreen from "./screens/StatsScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import ManageGoalScreen from "./screens/ManageGoalScreen";
 import ManageTaskScreen from "./screens/ManageTaskScreen";
+import ManageUserInfoScreen from "./screens/ManageUserInfoScreen";
+import ColorPickerScreen from "./screens/ColorPickerScreen";
+import LoginScreen from "./screens/LoginScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
 import store from "./store/index";
+import TasksEventScreen from "./screens/TasksEventScreen";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
+import { GlobalColors } from "./GlobalColors";
+import RegisterScreen from "./screens/RegisterScreen";
+import { useState, useEffect, useLayoutEffect } from "react";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 // AppRegistry.registerComponent("X", () => App);
-const BottomNavigation = () => {
+const BottomNavigation = ({ user }) => {
+  // console.log(user);
+  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
+  useLayoutEffect(() => {
+    // if (user) {
+    var color = Object.keys(GlobalColors).map(function (s) {
+      return GlobalColors[user.color];
+    });
+
+    setColorTheme(color[0]);
+    // }
+  }, [user]);
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarLabelStyle: { color: "black" },
+        headerShown: false,
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="Hub"
         component={GoalsScreen}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={24} color="black" />
+          tabBarLabel: ({ focused }) => {
+            return (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "500",
+                  color: focused
+                    ? colorTheme.primary800
+                    : colorTheme.primary300,
+                }}
+              >
+                Hub
+              </Text>
+            );
+          },
+
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "aperture" : "aperture-outline"}
+              size={24}
+              color={focused ? colorTheme.primary800 : colorTheme.primary300}
+            />
           ),
         }}
       />
+
       <Tab.Screen
-        name="Tasks"
-        component={TasksScreen}
+        name="Planner"
+        component={TasksEventScreen}
         options={{
-          tabBarLabel: "Tasks",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="briefcase-outline" size={24} color="black" />
+          tabBarLabel: ({ focused }) => {
+            return (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "500",
+                  color: focused
+                    ? colorTheme.primary800
+                    : colorTheme.primary300,
+                }}
+              >
+                Planner
+              </Text>
+            );
+          },
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "briefcase" : "briefcase-outline"}
+              size={24}
+              color={focused ? colorTheme.primary800 : colorTheme.primary300}
+            />
           ),
         }}
       />
@@ -50,29 +109,56 @@ const BottomNavigation = () => {
         name="Calendar"
         component={CalendarScreen}
         options={{
-          tabBarLabel: "Calendar",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={24} color="black" />
+          tabBarLabel: ({ focused }) => {
+            return (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "500",
+                  color: focused
+                    ? colorTheme.primary800
+                    : colorTheme.primary300,
+                }}
+              >
+                Calendar
+              </Text>
+            );
+          },
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "calendar" : "calendar-outline"}
+              size={24}
+              color={focused ? colorTheme.primary800 : colorTheme.primary300}
+            />
           ),
         }}
       />
+
       <Tab.Screen
-        name="Stats"
-        component={StatsScreen}
+        name="Settings"
+        component={SettingsScreen}
         options={{
-          tabBarLabel: "Stats",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart-outline" size={24} color="black" />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={24} color="black" />
+          tabBarLabel: ({ focused }) => {
+            return (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "500",
+                  color: focused
+                    ? colorTheme.primary800
+                    : colorTheme.primary300,
+                }}
+              >
+                Settings
+              </Text>
+            );
+          },
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "settings" : "settings-outline"}
+              size={24}
+              color={focused ? colorTheme.primary800 : colorTheme.primary300}
+            />
           ),
         }}
       />
@@ -81,21 +167,64 @@ const BottomNavigation = () => {
 };
 
 export default function App() {
+  // const user = useSelector((store) => store.auth.user);
+
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "helvetica-neue": require("./assets/fonts/Helvetica-Neue.ttf"),
+  });
+  // if (!fontsLoaded) {
+  //   return <AppLoading />;
+  // }
+
   return (
     <Provider store={store}>
       <StatusBar style="auto" />
       <NavigationContainer>
         <Stack.Navigator
-        // screenOptions={{
-        //   // headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-        //   headerTintColor: "white",
-        // }}
+          // screenOptions={{
+          //   // headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+          //   headerTintColor: "white",
+          // }}
+          initialRouteName={
+            store.getState().auth.user?.username ? "BottomNavigation" : "Login"
+          }
         >
           <Stack.Screen
-            name="ExpensesOverview"
-            component={BottomNavigation}
-            options={{ headerShown: false }}
+            name="Login"
+            component={LoginScreen}
+            options={{
+              tabBarLabel: ({ focused }) => {
+                return (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: "500",
+                      color: focused
+                        ? GlobalColors.colors.primary700
+                        : "#8e8e93",
+                    }}
+                  >
+                    Login
+                  </Text>
+                );
+              },
+              tabBarIcon: ({ color, size, focused }) => (
+                <Ionicons
+                  name={focused ? "log-in" : "log-in-outline"}
+                  size={24}
+                  color={focused ? GlobalColors.colors.primary700 : "#8e8e93"}
+                />
+              ),
+            }}
           />
+          <Stack.Screen
+            name="BottomNavigation"
+            options={{ headerShown: false }}
+          >
+            {(props) => <BottomNavigation user={store.getState().auth.user} />}
+          </Stack.Screen>
           <Stack.Screen
             name="ManageGoalScreen"
             component={ManageGoalScreen}
@@ -108,6 +237,50 @@ export default function App() {
             component={ManageTaskScreen}
             options={{
               presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="ManageUserInfoScreen"
+            component={ManageUserInfoScreen}
+            options={{
+              presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="ColorPickerScreen"
+            component={ColorPickerScreen}
+            options={{
+              presentation: "modal",
+              animation: "slide_from_bottom",
+            }}
+          />
+
+          <Stack.Screen
+            name="Register"
+            component={RegisterScreen}
+            options={{
+              tabBarLabel: ({ focused }) => {
+                return (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: "500",
+                      color: focused
+                        ? GlobalColors.colors.primary700
+                        : "#8e8e93",
+                    }}
+                  >
+                    Register
+                  </Text>
+                );
+              },
+              tabBarIcon: ({ color, size, focused }) => (
+                <Ionicons
+                  name={focused ? "log-in" : "log-in-outline"}
+                  size={24}
+                  color={focused ? GlobalColors.colors.primary700 : "#8e8e93"}
+                />
+              ),
             }}
           />
         </Stack.Navigator>

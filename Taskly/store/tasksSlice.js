@@ -3,36 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const tasksSlice = createSlice({
   name: "tasks",
   initialState: {
-    taskList: [
-      {
-        id: 1,
-        title: "Lose weight",
-        description: "the task",
-        time: "09:00",
-        day: "2023-03-22",
-        duration: 30,
-        completed: false,
-        goal: { title: "goal1" },
-      },
-      {
-        id: 2,
-        title: "Eat healthy",
-        description: "the task",
-        time: "10:00",
-        day: "2023-03-23",
-        duration: 30,
-        completed: false,
-      },
-      {
-        id: 2,
-        title: "Eat less",
-        description: "the task",
-        time: "18:00",
-        day: "2023-03-23",
-        duration: 60,
-        completed: false,
-      },
-    ],
+    taskList: [],
     changed: false,
   },
   reducers: {
@@ -41,6 +12,9 @@ const tasksSlice = createSlice({
     },
     changeStatus(state) {
       state.changed = false;
+    },
+    changeStatusToActive(state) {
+      state.changed = true;
     },
     changeInputs(state, action) {
       state.changed = true;

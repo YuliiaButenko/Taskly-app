@@ -1,4 +1,5 @@
 import { View, StyleSheet } from "react-native";
+import { GlobalColors } from "../../GlobalColors";
 
 const Card = (props) => {
   return <View style={styles.card}>{props.children}</View>;
@@ -10,14 +11,12 @@ const styles = StyleSheet.create({
     margin: 12,
     padding: 12,
     borderRadius: 9,
-    backgroundColor: "white",
     height: "20%",
-    // width: "100%",
     alignItems: "center",
-
     elevation: 4,
     backgroundColor: "white",
-    shadowColor: "#76737350",
+    // shadowColor: "#76737350",
+    shadowColor: GlobalColors.colors.gray700,
     shadowOpacity: 0.25,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
