@@ -36,10 +36,8 @@ export const login = (username, password) => {
     dispatch(userActions.clearError());
     try {
       await sendRequest();
-      // dispatch(userActions.clearError());
     } catch (error) {
       console.log(error);
-      // dispatch(userActions.clearError());
       dispatch(userActions.logError("Password is incorrect"));
     }
   };
@@ -77,10 +75,8 @@ export const register = (
       dispatch(userActions.clearError());
       if (response.ok) {
         const { token } = await response.json();
-        // dispatch(userActions.clearError());
         dispatch(setUser(token));
       } else {
-        // dispatch(userActions.clearError());
         const report = await response.json();
         for (let i = 0; i < report.length; i++) {
           dispatch(userActions.logError(report[i]));
@@ -100,41 +96,6 @@ export const logout = (dispatch) => {
   dispatch(userActions.clearError());
   userActions.logoutUser();
 };
-
-// export const updateUser = (username, email, userId) => {
-//   return async (dispatch) => {
-//     const sendRequest = async () => {
-//       const request = {
-//         method: "PUT",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//           username,
-//           email,
-//           userId,
-//         }),
-//       };
-
-//       const response = await fetch(
-//         "http://localhost:8080/user/update",
-//         request
-//       );
-//       if (!response.ok) {
-//         dispatch(userActions.clearError());
-//         const report = await response.json();
-//         for (let i = 0; i < report.length; i++) {
-//           dispatch(userActions.logError(report[i]));
-//         }
-//       }
-//     };
-//     try {
-//       await sendRequest();
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-// };
 
 function setUser(token) {
   return async (dispatch) => {
@@ -161,7 +122,7 @@ function setUser(token) {
         id: body.id,
         email: body.email,
         token: token,
-        color: body.color,
+        color: body.color ? body.color : "blue",
         pictureUrl: body.pictureUrl,
       };
       dispatch(userActions.clearError());
@@ -189,7 +150,6 @@ export const updateUserInfo = (user) => {
       } else {
         dispatch(userActions.clearError());
         const report = await response.json();
-        // console.log(report);
         for (let i = 0; i < report.length; i++) {
           await dispatch(userActions.logError(report[i]));
         }

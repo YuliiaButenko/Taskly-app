@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { GlobalColors } from "../../GlobalColors";
 import { useSelector } from "react-redux";
 
@@ -14,7 +14,7 @@ function Button({
   const user = useSelector((state) => state.auth.user);
 
   const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (user?.username) {
       var color = Object.keys(GlobalColors).map(function (s) {
         return GlobalColors[user.color];
@@ -22,7 +22,7 @@ function Button({
 
       setColorTheme(color[0]);
     }
-  }, []);
+  });
 
   return (
     <View style={style}>

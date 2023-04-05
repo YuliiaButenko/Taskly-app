@@ -29,7 +29,6 @@ const RegisterScreen = ({ navigation }) => {
     email: "",
     pictureUrl: "",
     color: "blue",
-    // Image.resolveAssetSource(DefaultPic).uri,
   });
 
   const [fullNameError, setFullNameError] = useState("");

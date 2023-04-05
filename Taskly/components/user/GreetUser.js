@@ -3,7 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { GlobalColors } from "../../GlobalColors";
 
-const GreetUser = () => {
+const GreetUser = ({ colorTheme }) => {
   const user = useSelector((store) => store.auth.user);
   return (
     <View style={styles.root}>
@@ -26,7 +26,7 @@ const GreetUser = () => {
         <Ionicons
           name="notifications-outline"
           size={28}
-          color={GlobalColors.colors.primary800}
+          color={colorTheme.primary800}
         />
       </View>
     </View>

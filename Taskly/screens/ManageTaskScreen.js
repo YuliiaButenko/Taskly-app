@@ -32,28 +32,21 @@ const ManageTaskScreen = ({ route, navigation }) => {
       title: isEditing ? "Edit Task" : "Add Task",
     });
     dispatch(fetchTasksDataByUserId(user.id));
+  }, [navigation, isEditing, user]);
+
+  useEffect(() => {
+    dispatch(fetchTasksDataByUserId(user.id));
+    dispatch(tasksActions.changeStatus());
+  }, [dispatch, user.id]);
+
+  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
+  useLayoutEffect(() => {
     var color = Object.keys(GlobalColors).map(function (s) {
       return GlobalColors[user.color];
     });
 
     setColorTheme(color[0]);
-  }, [navigation, isEditing, user]);
-
-  useEffect(() => {
-    // if (taskChanged) {
-    dispatch(fetchTasksDataByUserId(user.id));
-    dispatch(tasksActions.changeStatus());
-    // }
-  }, [dispatch, user.id]);
-
-  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
-  // useLayoutEffect(() => {
-  //   var color = Object.keys(GlobalColors).map(function (s) {
-  //     return GlobalColors[user.color];
-  //   });
-
-  //   setColorTheme(color[0]);
-  // }, [user]);
+  }, [user]);
 
   const deleteTaskHandler = () => {
     dispatch(tasksActions.changeStatusToActive());
@@ -67,7 +60,6 @@ const ManageTaskScreen = ({ route, navigation }) => {
 
   const confirmHandler = (taskData) => {
     if (isEditing) {
-      // console.log(taskData);
       dispatch(updateTask(taskData));
     } else {
       dispatch(createTask(taskData));
@@ -86,6 +78,7 @@ const ManageTaskScreen = ({ route, navigation }) => {
           onCancel={cancelHandler}
           defaultValues={selectedTask}
           clickedDay={clickedDay}
+          colorTheme={colorTheme}
         />
         {isEditing && (
           <View
@@ -111,14 +104,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     paddingBottom: 30,
-    // backgroundColor: GlobalColors.colors.primary500,
   },
   deleteContainer: {
     marginTop: 16,
     marginBottom: 36,
     paddingTop: 8,
     borderTopWidth: 2,
-    // borderTopColor: GlobalColors.colors.primary700,
     alignItems: "center",
   },
 });

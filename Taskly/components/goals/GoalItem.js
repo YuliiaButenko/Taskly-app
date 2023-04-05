@@ -44,6 +44,7 @@ const GoalItem = (props) => {
     if (props.edit) {
       navigation.navigate("ManageGoalScreen", {
         id: id,
+        colorTheme: props.colorTheme,
       });
     } else {
       Alert.alert(

@@ -52,7 +52,9 @@ const GoalsScreen = ({ navigation }) => {
   const completed = goals.filter((item) => item.completed);
 
   const handleAdd = () => {
-    navigation.navigate("ManageGoalScreen");
+    navigation.navigate("ManageGoalScreen", {
+      colorTheme: colorTheme,
+    });
   };
 
   return (
@@ -63,7 +65,7 @@ const GoalsScreen = ({ navigation }) => {
         textStyle={styles.spinnerTextStyle}
       />
       <View style={styles.greeting}>
-        <GreetUser />
+        <GreetUser colorTheme={colorTheme} />
       </View>
       <View style={styles.onProgressContainer}>
         <Text style={styles.onProgressText}>On Progress({active.length})</Text>
@@ -71,7 +73,12 @@ const GoalsScreen = ({ navigation }) => {
         {active.length > 0 ? (
           <ScrollView horizontal={true} style={styles.carousel}>
             {active.map((item) => (
-              <GoalItem item={item} edit={true} key={item.id} />
+              <GoalItem
+                item={item}
+                edit={true}
+                key={item.id}
+                colorTheme={colorTheme}
+              />
             ))}
           </ScrollView>
         ) : (
@@ -84,7 +91,12 @@ const GoalsScreen = ({ navigation }) => {
         {completed.length > 0 ? (
           <ScrollView horizontal={true} style={styles.carousel}>
             {completed.map((item) => (
-              <GoalItem item={item} edit={false} key={item.id} />
+              <GoalItem
+                item={item}
+                edit={false}
+                key={item.id}
+                colorTheme={colorTheme}
+              />
             ))}
           </ScrollView>
         ) : (
@@ -135,7 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 5,
     marginTop: 24,
-    // color: "#283747",
     color: GlobalColors.colors.gray900,
     fontWeight: "500",
     color: "#283747",

@@ -15,7 +15,6 @@ import ColorPicker, {
   HueSlider,
   InputWidget,
 } from "reanimated-color-picker";
-// import Button from "../UI/Button";
 
 export default function Color({ open, onSelectColor, color }) {
   const [active, setActive] = useState(color);
@@ -32,13 +31,6 @@ export default function Color({ open, onSelectColor, color }) {
 
   return (
     <>
-      {/* <Button title=" " onPress={() => setShowModal(true)} /> */}
-
-      {/* <Modal
-        onRequestClose={() => setShowModal(false)}
-        visible={showModal}
-        animationType="slide"
-      > */}
       <Modal
         onRequestClose={() => setShowModal(false)}
         visible={showModal}

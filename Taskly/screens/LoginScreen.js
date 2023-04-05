@@ -21,6 +21,7 @@ import { login } from "../store/user-actions";
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
 
   const [inputs, setInputs] = useState({
     username: "JohnSmith",
@@ -34,9 +35,18 @@ const LoginScreen = ({ navigation }) => {
     if (errorList.length > 0) {
       setLoginError(errorList[0]);
       dispatch(userActions.clearError());
-      // dispatch(userActions.clearError());
     }
   }, [errorList, user]);
+
+  useEffect(() => {
+    if (user?.username) {
+      var color = Object.keys(GlobalColors).map(function (s) {
+        return GlobalColors[user.color];
+      });
+
+      setColorTheme(color[0]);
+    }
+  }, [user]);
 
   const inputChangedHandler = (inputIdentifier, enteredValue) => {
     dispatch(userActions.clearError());
@@ -53,7 +63,6 @@ const LoginScreen = ({ navigation }) => {
     dispatch(userActions.clearError());
     setLoginError("");
     dispatch(login(inputs.username, inputs.password));
-    // dispatch(userActions.clearError());
     if (user?.username) {
       navigation.navigate("BottomNavigation");
     }
@@ -103,7 +112,9 @@ const LoginScreen = ({ navigation }) => {
               <View style={styles.button}>
                 <Button
                   onPress={handleSubmit}
-                  backgroundStyle={{ marginTop: 18 }}
+                  backgroundStyle={{
+                    marginTop: 18,
+                  }}
                 >
                   LOGIN
                 </Button>

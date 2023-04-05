@@ -85,12 +85,14 @@ const TasksEventScreen = ({ navigation }) => {
   const handleClick = (item) => {
     navigation.navigate("ManageTaskScreen", {
       id: item.id,
+      colorTheme: colorTheme,
     });
   };
 
   const handleAdd = () => {
     navigation.navigate("ManageTaskScreen", {
       clickedDay: day,
+      colorTheme: colorTheme,
     });
   };
 

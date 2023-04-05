@@ -1,18 +1,3 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-
-// export const CustomColors = () => {
-//   const user = useSelector((store) => store.auth.user);
-//   const color = user.color;
-//   const [colorTheme, setColorTheme] = useState(GlobalColors.user.blue);
-//   if (color === GlobalColors.user.teal) {
-//     setColorTheme(GlobalColors.teal);
-//   } else {
-//     setColorTheme(GlobalColors.colors);
-//   }
-//   return colorTheme;
-// };
-
 export const GlobalColors = {
   user: {
     teal: "#769c9d",
@@ -138,8 +123,6 @@ export const GlobalColors = {
     accent500: "#ad3434",
     error50: "#fcc4e4",
     error500: "#9b095c",
-    // gray500: "#39324a",
-    // gray700: "#221c30",
     gray50: "#dfeaeb",
     gray100: "#d7e1e2",
     gray300: "#c8d0d1",

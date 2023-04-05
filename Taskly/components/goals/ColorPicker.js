@@ -1,9 +1,3 @@
-// import ColorPicker from "react-native-wheel-color-picker";
-// import NativeColorPicker from "native-color-picker";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -35,7 +29,6 @@ const ColorPickerInput = ({ onChange, color, custom }) => {
     color5 = "#ada7c9";
     color6 = "#747BA5";
   } else {
-    //teal
     color1 = GlobalColors.user.orange;
     color2 = GlobalColors.user.red;
 

@@ -20,7 +20,13 @@ import ColorPickerInput from "./ColorPicker";
 import { CustomColors } from "../../GlobalColors";
 import { addOpacity } from "../util/addOpacity";
 
-const GoalForm = ({ submitButtonLabel, onCancel, onSubmit, defaultValues }) => {
+const GoalForm = ({
+  submitButtonLabel,
+  onCancel,
+  onSubmit,
+  defaultValues,
+  colorTheme,
+}) => {
   const goals = useSelector((store) => store.goals.goalList);
   const user = useSelector((state) => state.auth.user);
   const color = user.color;
@@ -42,15 +48,6 @@ const GoalForm = ({ submitButtonLabel, onCancel, onSubmit, defaultValues }) => {
     user: user,
   });
   const [error, setError] = useState("");
-
-  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
-  useLayoutEffect(() => {
-    var color = Object.keys(GlobalColors).map(function (s) {
-      return GlobalColors[user.color];
-    });
-
-    setColorTheme(color[0]);
-  }, [user]);
 
   const showDatepicker = () => {
     DateTimePickerAndroid.open({
@@ -307,21 +304,18 @@ const styles = StyleSheet.create({
   },
   datePickersIos: {
     alignContent: "center",
-    // backgroundColor: GlobalColors.colors.primary200,
     padding: 12,
     borderRadius: 6,
     borderColor: "transparent",
   },
   datePickers: {
     alignContent: "center",
-    // backgroundColor: GlobalColors.colors.primary200,
     padding: 6,
     borderRadius: 6,
     borderColor: "transparent",
   },
   dateLabel: {
     fontSize: 12,
-    // color: GlobalColors.colors.primary50,
     marginBottom: 4,
   },
   dateInputContainer: {

@@ -26,18 +26,14 @@ import { useState, useEffect, useLayoutEffect } from "react";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-// AppRegistry.registerComponent("X", () => App);
 const BottomNavigation = ({ user }) => {
-  // console.log(user);
   const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
   useLayoutEffect(() => {
-    // if (user) {
     var color = Object.keys(GlobalColors).map(function (s) {
-      return GlobalColors[user.color];
+      return GlobalColors[user?.color];
     });
 
     setColorTheme(color[0]);
-    // }
   }, [user]);
 
   return (
@@ -167,8 +163,6 @@ const BottomNavigation = ({ user }) => {
 };
 
 export default function App() {
-  // const user = useSelector((store) => store.auth.user);
-
   const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
@@ -183,10 +177,6 @@ export default function App() {
       <StatusBar style="auto" />
       <NavigationContainer>
         <Stack.Navigator
-          // screenOptions={{
-          //   // headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-          //   headerTintColor: "white",
-          // }}
           initialRouteName={
             store.getState().auth.user?.username ? "BottomNavigation" : "Login"
           }

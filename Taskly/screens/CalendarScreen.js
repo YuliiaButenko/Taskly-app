@@ -83,7 +83,9 @@ const CalendarScreen = () => {
         ></FlatList>
       ) : (
         <View style={{ height: "100%" }}>
-          <Text style={styles.textStyle}>Wow, Look! Nothing for this day!</Text>
+          <Text style={[styles.textStyle, { color: colorTheme.primary900 }]}>
+            Wow, Look! Nothing for this day!
+          </Text>
         </View>
       )}
     </SafeAreaView>
@@ -100,9 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5,
     marginTop: 24,
-    color: "#283747",
     fontWeight: "500",
-    color: "#283747",
     textAlign: "center",
   },
 });

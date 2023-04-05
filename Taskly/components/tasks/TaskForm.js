@@ -23,6 +23,7 @@ const TaskForm = ({
   onSubmit,
   defaultValues,
   clickedDay,
+  colorTheme,
 }) => {
   const tasks = useSelector((store) => store.tasks.taskList);
   const goals = useSelector((store) => store.goals.goalList);
@@ -32,17 +33,6 @@ const TaskForm = ({
       .filter((item) => item.completed !== true)
       .map((item) => item.title)
   );
-
-  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
-  useLayoutEffect(() => {
-    if (user) {
-      var color = Object.keys(GlobalColors).map(function (s) {
-        return GlobalColors[user.color];
-      });
-
-      setColorTheme(color[0]);
-    }
-  }, [user]);
 
   let list = [{ label: "No goal", value: "No goal" }];
 
@@ -557,14 +547,12 @@ const styles = StyleSheet.create({
   },
   datePickersIos: {
     alignContent: "center",
-    // backgroundColor: GlobalColors.colors.primary200,
     padding: 12,
     borderRadius: 12,
     borderColor: "transparent",
   },
   datePickers: {
     alignContent: "center",
-    // backgroundColor: GlobalColors.colors.primary200,
     padding: 6,
     borderRadius: 12,
     borderColor: "transparent",

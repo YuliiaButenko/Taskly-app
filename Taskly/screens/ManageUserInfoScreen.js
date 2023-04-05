@@ -22,11 +22,10 @@ import * as ImagePicker from "expo-image-picker";
 
 const ManageUserInfoScreen = ({ route, navigation }) => {
   const user = useSelector((store) => store.auth.user);
-  // console.log(user);
+  const colorTheme = route.params?.colorTheme;
   const dispatch = useDispatch();
 
   const errorList = useSelector((state) => state.auth.errorList);
-  // console.log(errorList);
 
   const [inputs, setInputs] = useState({
     id: user.id,
@@ -42,19 +41,7 @@ const ManageUserInfoScreen = ({ route, navigation }) => {
   const [usernameError, setUsernameError] = useState();
   const [emailError, setEmailError] = useState();
 
-  const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
-  useLayoutEffect(() => {
-    if (user?.username) {
-      var color = Object.keys(GlobalColors).map(function (s) {
-        return GlobalColors[user.color];
-      });
-
-      setColorTheme(color[0]);
-    }
-  }, [user]);
-
   useEffect(() => {
-    // const fetch = async () => {
     if (errorList) {
       for (let i = 0; i < errorList.length; i++) {
         let errorMsg = errorList[i];
@@ -71,10 +58,7 @@ const ManageUserInfoScreen = ({ route, navigation }) => {
           setUsernameError("Username is required");
         }
       }
-      // dispatch(userActions.clearError());
     }
-    // };
-    // fetch();
   }, [
     user,
     errorList,
@@ -92,14 +76,10 @@ const ManageUserInfoScreen = ({ route, navigation }) => {
       email: inputs.email,
       pictureUrl: picture,
     };
-    // console.log(usernameError);
-    // await dispatch(updateUserInfo(userData));
     dispatch(updateUserInfo(userData));
 
     if (!usernameError && !fullNameError && !emailError) {
       navigation.goBack();
-
-      // console.log("go back");
     } else {
       dispatch(userActions.clearError());
 
@@ -107,13 +87,11 @@ const ManageUserInfoScreen = ({ route, navigation }) => {
       setFullNameError();
       setEmailError();
     }
-    // goBack();
   };
 
   const goBack = () => {
     console.log(usernameError);
     if (!usernameError && !fullNameError && !emailError) {
-      // navigation.goBack();
       console.log("go back");
     } else {
       dispatch(userActions.clearError());
@@ -186,7 +164,7 @@ const ManageUserInfoScreen = ({ route, navigation }) => {
           />
           <Text
             style={{
-              color: GlobalColors.colors.primary50,
+              color: colorTheme.primary50,
               textAlign: "center",
               fontSize: 12,
             }}
@@ -249,7 +227,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    // backgroundColor: GlobalColors.colors.primary500,
   },
 
   buttons: {
@@ -278,7 +255,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   changeAvatarButtonText: {
-    // color: GlobalColors.colors.primary50,
     fontSize: 18,
   },
   title: {
@@ -289,8 +265,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   inputsRow: {
-    // flexDirection: "row",
-    // justifyContent: "space-between",
     flex: 1,
     margin: 12,
   },

@@ -43,11 +43,7 @@ const ColorPickerScreen = ({ navigation, route }) => {
     throw new Error("Bad Hex");
   };
 
-  //   hexToRgbA("#fbafff");
-
   const handleSubmit = (value) => {
-    // const color = hexToRgbA(active);
-    // console.log(active);
     if (value) {
       route?.params.onSelectColor(active);
     } else {

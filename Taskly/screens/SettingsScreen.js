@@ -9,12 +9,7 @@ import {
   Animated,
 } from "react-native";
 import React, { useRef } from "react";
-import ModalDropdown from "react-native-modal-dropdown";
-import SelectDropdown from "react-native-select-dropdown";
-// import Animated, {
-//   useAnimatedStyle,
-//   useSharedValue,
-// } from "react-native-reanimated";
+
 import { Ionicons } from "@expo/vector-icons";
 import { userActions } from "../store/userSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,21 +17,15 @@ import { GlobalColors } from "../GlobalColors";
 import ToggleSwitch from "toggle-switch-react-native";
 import { updateUserInfo } from "../store/user-actions";
 import { useState, useEffect, useLayoutEffect } from "react";
-import Color from "../components/goals/Color";
 import ColorPickerInput from "../components/goals/ColorPicker";
 import Button from "../components/UI/Button";
-// import { CustomColors } from "../components/util/Global";
-import { customColors } from "../components/util/Global";
 
 const SettingsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const user = useSelector((store) => store.auth.user);
-
+  const user = useSelector((store) => store.auth?.user);
   const [notificationsOn, setNotificationsOn] = useState(false);
-  const [colorPicker, setColorPicker] = useState(false);
-
-  const [active, setActive] = useState("blue");
+  const [active, setActive] = useState(user?.color);
 
   const [colorTheme, setColorTheme] = useState(GlobalColors.colors);
   useLayoutEffect(() => {
@@ -49,26 +38,34 @@ const SettingsScreen = ({ navigation }) => {
     }
   }, [user, dispatch]);
 
-  // useLayoutEffect(() => {
-  //   if (user.color === GlobalColors.user.teal) {
-  //     colorTheme = GlobalColors.teal;
-  //   } else {
-  //     colorTheme = GlobalColors.colors;
-  //   }
-  // }, [user, dispatch]);
-
   const handleClick = (user) => {
-    navigation.navigate(
-      "ManageUserInfoScreen"
-      // {
-      //   id: user.id,
-      // }
-    );
+    navigation.navigate("ManageUserInfoScreen", {
+      colorTheme: colorTheme,
+    });
   };
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [visible, setVisible] = useState(false);
-  console.log(fadeAnim);
+
+  const onSelectColor = (value) => {
+    if (value === GlobalColors.user.teal) {
+      setActive("teal");
+    } else if (value === GlobalColors.user.red) {
+      setActive("red");
+    } else if (value === GlobalColors.user.orange) {
+      setActive("orange");
+    } else if (value === GlobalColors.user.purple) {
+      setActive("purple");
+    } else if (value === GlobalColors.user.pink) {
+      setActive("pink");
+    } else if (value === GlobalColors.user.gray) {
+      setActive("gray");
+    } else if (value === GlobalColors.user.coral) {
+      setActive("coral");
+    } else {
+      setActive("blue");
+    }
+  };
 
   const fadeIn = () => {
     // Will change fadeAnim value to 1 in 5 seconds
@@ -89,48 +86,12 @@ const SettingsScreen = ({ navigation }) => {
     }).start();
   };
 
-  const onSelectColor = (value) => {
-    if (value === GlobalColors.user.teal) {
-      setActive("teal");
-    } else if (value === GlobalColors.user.red) {
-      setActive("red");
-    } else if (value === GlobalColors.user.orange) {
-      setActive("orange");
-    } else if (value === GlobalColors.user.purple) {
-      setActive("purple");
-    } else if (value === GlobalColors.user.pink) {
-      setActive("pink");
-    } else if (value === GlobalColors.user.gray) {
-      setActive("gray");
-    } else if (value === GlobalColors.user.coral) {
-      setActive("coral");
-    } else {
-      setActive("blue");
-    }
-    // if (value) {
-    //   setActive(value);
-
-    // onChange(value);
-    // dispatch(updateUserInfo({ ...user, color: active }));
-    //   fadeOut();
-
-    // }
-  };
-
   const onSubmit = () => {
     dispatch(updateUserInfo({ ...user, color: active }));
     fadeOut();
   };
 
-  const openColorPicker = () => {
-    navigation.navigate("ColorPickerScreen", {
-      color: active,
-      onSelectColor: onSelectColor,
-    });
-  };
-
   return (
-    // !colorPicker ? (
     <SafeAreaView style={styles.root}>
       <View style={styles.container}>
         <Text style={styles.header}>Account</Text>
@@ -167,17 +128,12 @@ const SettingsScreen = ({ navigation }) => {
             <Ionicons
               name="notifications"
               size={26}
-              // color={GlobalColors.colors.primary700}
               color={colorTheme.primary700}
             />
           </View>
           <Text style={styles.notificationText}>Notifications</Text>
-          {/* <View> */}
           <ToggleSwitch
-            // style={styles.switch}
             isOn={notificationsOn}
-            // onColor={GlobalColors.colors.primary700}
-            // offColor={GlobalColors.colors.primary200}
             onColor={colorTheme.primary700}
             offColor={colorTheme.primary100}
             label={notificationsOn ? "On" : "Off"}
@@ -185,7 +141,6 @@ const SettingsScreen = ({ navigation }) => {
             size="large"
             onToggle={() => setNotificationsOn(!notificationsOn)}
           />
-          {/* </View> */}
         </View>
         <View style={styles.innerContainer}>
           <View
@@ -197,14 +152,11 @@ const SettingsScreen = ({ navigation }) => {
             <Ionicons
               name="color-palette"
               size={26}
-              // color={GlobalColors.colors.primary700}
               color={colorTheme.primary700}
             />
           </View>
           <Text style={styles.notificationText}>Color Theme</Text>
           <Text style={styles.emptyText}></Text>
-
-          {/* <View style={styles.forwardButton}> */}
           <Pressable
             onPress={!visible ? fadeIn : fadeOut}
             style={[
@@ -213,13 +165,11 @@ const SettingsScreen = ({ navigation }) => {
             ]}
           >
             <Ionicons
-              name="chevron-forward"
+              name={!visible ? "chevron-down" : "chevron-up"}
               size={29}
-              // color={GlobalColors.colors.primary700}
               color={colorTheme.primary700}
             />
           </Pressable>
-          {/* </View> */}
         </View>
       </View>
 
@@ -234,23 +184,13 @@ const SettingsScreen = ({ navigation }) => {
         ]}
       >
         <ColorPickerInput
-          color={"pink"}
-          // onChange={(color) => setActive(color)}
+          color={active}
           onChange={onSelectColor}
           custom={false}
         />
-        {/* <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
-        > */}
-        {/* <Button style={{ marginVertical: 7 }}>Cancel</Button> */}
         <Button onPress={onSubmit} style={{ marginVertical: 7 }}>
-          Submit
+          Select
         </Button>
-        {/* </View> */}
       </Animated.View>
 
       <View style={styles.container}>
@@ -264,26 +204,19 @@ const SettingsScreen = ({ navigation }) => {
             <Ionicons
               name="log-out-outline"
               size={36}
-              // color={GlobalColors.colors.primary700}
               color={colorTheme.primary700}
             />
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
-    // ) : (
-    //   <Animated.View>
-    //     <Color color={active} onSelectColor={onSelectColor} />
-    //   </Animated.View>
   );
 };
 const styles = StyleSheet.create({
   root: {
-    // width: "90%",
     flex: 1,
     marginTop: 70,
     marginBottom: 12,
-    // marginHorizontal: 12,
   },
   avatar: {
     width: 60,
@@ -301,9 +234,6 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: "90%",
     margin: "5%",
-    // paddingHorizontal: "3%",
-    // padding: "4%",
-    // paddingRight: "8%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -313,7 +243,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   userNameContainer: {
-    // marginLeft: "10%",
     paddingHorizontal: "10%",
   },
   userName: {
@@ -328,13 +257,11 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 25,
-    // backgroundColor: GlobalColors.colors.primary100,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   notificationText: {
-    // flex: 1,
     fontSize: 20,
     marginHorizontal: "10%",
   },
@@ -345,19 +272,16 @@ const styles = StyleSheet.create({
     height: 50,
     width: 60,
     borderRadius: 12,
-    // backgroundColor: GlobalColors.colors.primary50,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
 
   fadingContainer: {
-    // flex: 1,
     height: 100,
     marginHorizontal: 24,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    // backgroundColor: GlobalColors.colors.primary100,
     borderRadius: 12,
   },
 });
